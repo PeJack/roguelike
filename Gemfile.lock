@@ -43,6 +43,12 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     gosu (0.10.5)
+    gosu_texture_packer (0.1.6)
+      gosu
+      json
+    gosu_tiled (0.1.1)
+      gosu
+      json
     i18n (0.7.0)
     json (1.8.3)
     loofah (2.0.3)
@@ -54,6 +60,7 @@ GEM
     minitest (5.8.4)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
+    perlin_noise (0.1.2)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -100,5 +107,8 @@ PLATFORMS
 
 DEPENDENCIES
   gosu
+  gosu_texture_packer
+  gosu_tiled
+  perlin_noise
   rails (= 4.2.1)
   sqlite3

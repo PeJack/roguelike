@@ -1,19 +1,17 @@
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
-WORLD_WIDTH = 1600
+WORLD_WIDTH = 1024  
 WORLD_HEIGHT = 768
 
-# physics constants
-# CP_SUBSTEPS = 6
-# MASS_DIVIDER = 200
+TILE_SIZE = 32
 
 # camera constants
-#CAMERA_BEHAVIOR = :stop_at_world_edge # or :free
-# CAMERA_BEHAVIOR = :free
-# PARALLAX_SEPARATION_FACTOR = 3.0
+CAMERA_SPEED = 5
 
 # player constants
+FRAME_DELAY = 200 # ms
+ANIMATION_TYPES = %i(movement attack)
 PLAYER_MAX_V = 75.0
 ANIM_DIVISOR = 175
 JUMP_IMPULSE = 200.0
@@ -30,5 +28,5 @@ MUSIC_DIR = "#{MEDIA_DIR}/music"
 BACKGROUNDS_DIR = "#{MEDIA_DIR}/backgrounds"
 
 module ZOrder
-  Background, ParallaxFar, ParallaxNear, Objects, Player, ParallaxObstruct, HUD = *0..6
+  Background, Player = *0..6
 end
