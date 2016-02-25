@@ -1,10 +1,12 @@
-require 'gosu'
+require 'chipmunk'
+
 require './lib/constants.rb'
 
 class Player
   attr_accessor :x, :y, :speed
+  attr_reader :body
   
-  def initialize
+  def initialize   
     # Load player animation
     @current_animation = :standing
     @standing = Gosu::Image.new("#{IMAGES_DIR}/pirate/idle_0.png")
@@ -23,9 +25,16 @@ class Player
     
     @x = @y = @var_x = @var_y = 0.0
     
+    # Physics variables
+    mass = @standing.height * @standing.width / MASS_DIVIDER
+    @body = CP::Body.new(mass, CP::INFINITY)
+    @body.object = self
+    @body.p = CP::Vec2.new(x, y)
+    @body.v_limit = PLAYER_MAX_V
+    
     # Current character direction (1 - right; -1 - left)
     @facing_dir = 1 
-    @speed = 3.5     
+    @speed = 5    
   end
   
   def warp(x, y)
@@ -40,8 +49,8 @@ class Player
     end
     
     @facing_dir = facing_dir
-    @x += x
-    @y += y
+    @body.p.x += x
+    @body.p.y += y
     @x %= 2048
     @y %= 1024
   end
@@ -83,25 +92,29 @@ class Player
     end
   end
   
-  def draw
-    if @var_x == @x && @var_y == @y && @current_animation != :attack
+  def draw(camera)
+    if @var_x == @body.p.x && @var_y == @body.p.y && @current_animation != :attack
       current_animation(:standing)
     end
 
     case @current_animation
     when :standing
-      @standing.draw_rot(@x, @y, ZOrder::Player, 0, 0.5, 0, @facing_dir)
-    when :movement
+      @cur_image = @standing
+    when :movement, :attack
       frame = @animation[@current_animation][:current_frame]
-      @animation[@current_animation][:frames][frame].draw_rot(@x, @y, ZOrder::Player, 0, 0.5, 0, @facing_dir)
-      @var_x = @x
-      @var_y = @y
-    when :attack
-      frame = @animation[@current_animation][:current_frame]
-      
-      @animation[@current_animation][:frames][frame].draw_rot(@x, @y, ZOrder::Player, 0, 0.5, 0, @facing_dir)
-      current_animation(:standing)
+      @cur_image = @animation[@current_animation][:frames][frame]
+      # frame = @animation[@current_animation][:current_frame]
+      # @animation[@current_animation][:frames][frame].draw_rot(@x, @y, ZOrder::Player, 0, 0.5, 0, @facing_dir)
+      # @var_x = @x
+      # @var_y = @y
+    # when :attack
+    #   frame = @animation[@current_animation][:current_frame]
+    #
+    #   @animation[@current_animation][:frames][frame].draw_rot(@x, @y, ZOrder::Player, 0, 0.5, 0, @facing_dir)
+    #   current_animation(:standing)
     end
+    
+    @cur_image.draw_rot(*camera.world_to_screen(CP::Vec2.new(@body.p.x, @body.p.y)).to_a, ZOrder::Player, @body.a, 0.5, 0.5, @facing_dir)
   end
   
 end

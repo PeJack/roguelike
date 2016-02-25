@@ -8,14 +8,14 @@ class Map
     @map = generate_map
   end
   
-  def draw
+  def draw(camera)
     @map.each do |x, row|
       row.each do |y, val|
         tile = @map[x][y]
         map_x = x * TILE_SIZE
         map_y = y * TILE_SIZE
-        
-        tile.draw(map_x, map_y, 0)
+        pos = CP::Vec2.new(map_x, map_y)
+        tile.draw(*camera.x_parallax_world_to_screen(pos, ZOrder::Background + 1).to_a, ZOrder::Background)
       end
     end
   end

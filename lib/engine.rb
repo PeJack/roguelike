@@ -16,10 +16,9 @@ class GameWindow < Gosu::Window
     
     # Create a player
     @player = Player.new
-    @player.warp(320, 240)
     
     # Create a camera
-    @camera = Camera.new(@player)
+    @camera = Camera.new(0,0)
   end
   
   def update
@@ -39,21 +38,37 @@ class GameWindow < Gosu::Window
       @player.attack
     end
     
-    @camera.update
+    update_camera
+  end
+  
+  def update_camera
+    @camera.parax = @player.body.p.x
+    @camera.paray = @player.body.p.y
+
+    if CAMERA_BEHAVIOR==:stop_at_world_edge
+      if (@player.body.p.x - SCREEN_WIDTH / 2 < 0)
+        @camera.x = 0
+      elsif (@player.body.p.x + SCREEN_WIDTH / 2) > WORLD_WIDTH
+        @camera.x = (WORLD_WIDTH - SCREEN_WIDTH
+      else
+        @camera.x = @player.body.p.x - SCREEN_WIDTH / 2
+      end
+    else
+      @camera.x = @player.body.p.x - SCREEN_WIDTH / 2
+    end
+
+    if (@player.body.p.y - SCREEN_HEIGHT / 2 < 0)
+      @camera.y = 0
+    elsif (@player.body.p.y + SCREEN_HEIGHT / 2 > WORLD_HEIGHT)
+      @camera.y = WORLD_HEIGHT - SCREEN_HEIGHT
+    else
+      @camera.y = @player.body.p.y - SCREEN_HEIGHT / 2
+    end
   end
   
   def draw 
-    cam_x = @camera.x
-    cam_y = @camera.y
-    off_x = width / 2 - cam_x
-    off_y = height / 2 - cam_y
-
-    translate(off_x, off_y) do
-      @map.draw
-    end
-    @player.draw
-    
-    self.caption = "P_X: #{@player.x}; P_Y: #{@player.y}; CAM_X: #{@camera.x}; CAM_Y: #{@camera.y}; OFFSET: #{[off_x, off_y]}; FPS: #{Gosu.fps}"
+    @map.draw(@camera)
+    @player.draw(@camera)
   end
   
   def button_down(id)

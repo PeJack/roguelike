@@ -1,17 +1,20 @@
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 1024
 
-WORLD_WIDTH = 1024  
-WORLD_HEIGHT = 768
+WORLD_WIDTH = 1600  
+WORLD_HEIGHT = 1200
 
 TILE_SIZE = 32
 
 # camera constants
 CAMERA_SPEED = 5
+CAMERA_BEHAVIOR = :stop_at_world_edge
+PARALLAX_SEPARATION_FACTOR = 1.0
 
 # player constants
 FRAME_DELAY = 200 # ms
 ANIMATION_TYPES = %i(movement attack)
+MASS_DIVIDER = 200
 PLAYER_MAX_V = 75.0
 ANIM_DIVISOR = 175
 JUMP_IMPULSE = 200.0
@@ -28,5 +31,5 @@ MUSIC_DIR = "#{MEDIA_DIR}/music"
 BACKGROUNDS_DIR = "#{MEDIA_DIR}/backgrounds"
 
 module ZOrder
-  Background, Player = *0..6
+  Background, Player = *0..1
 end
